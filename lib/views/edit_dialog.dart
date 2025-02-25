@@ -21,6 +21,8 @@ class EditDialog extends StatefulWidget {
 class _EditDialogState extends State<EditDialog> {
   late TextEditingController _amountController;
   late TextEditingController _dailyConsumptionController;
+  late TextEditingController _usagePerDayController;
+  late TextEditingController _numberOfUsersController;
 
   @override
   void initState() {
@@ -35,12 +37,20 @@ class _EditDialogState extends State<EditDialog> {
     _dailyConsumptionController = TextEditingController(
       text: widget.consumable.dailyConsumption?.toString() ?? '0',
     );
+    _usagePerDayController = TextEditingController(
+      text: widget.consumable.usagePerDay.toString(),
+    );
+    _numberOfUsersController = TextEditingController(
+      text: widget.consumable.numberOfUsers.toString(),
+    );
   }
 
   @override
   void dispose() {
     _amountController.dispose();
     _dailyConsumptionController.dispose();
+    _usagePerDayController.dispose();
+    _numberOfUsersController.dispose();
     super.dispose();
   }
 
@@ -66,6 +76,18 @@ class _EditDialogState extends State<EditDialog> {
             decoration: InputDecoration(labelText: '1日あたりの使用量 (ml)'),
             keyboardType: TextInputType.number,
           ),
+          SizedBox(height: 16),
+          TextField(
+            controller: _usagePerDayController,
+            decoration: InputDecoration(labelText: '1日の使用回数'),
+            keyboardType: TextInputType.number,
+          ),
+          SizedBox(height: 16),
+          TextField(
+            controller: _numberOfUsersController,
+            decoration: InputDecoration(labelText: '使用人数'),
+            keyboardType: TextInputType.number,
+          ),
         ],
       ),
       actions: [
@@ -81,12 +103,20 @@ class _EditDialogState extends State<EditDialog> {
             final newDailyConsumption =
                 double.tryParse(_dailyConsumptionController.text) ??
                 widget.consumable.dailyConsumption;
+            final newUsagePerDay =
+                int.tryParse(_usagePerDayController.text) ??
+                widget.consumable.usagePerDay;
+            final newNumberOfUsers =
+                int.tryParse(_numberOfUsersController.text) ??
+                widget.consumable.numberOfUsers;
 
             widget.controller.handleUserInput('update', {
               'name': widget.consumable.name,
               'amount': newAmount,
               'tags': widget.consumable.tags,
               'dailyConsumption': newDailyConsumption,
+              'usagePerDay': newUsagePerDay,
+              'numberOfUsers': newNumberOfUsers,
             });
 
             Navigator.pop(context);
