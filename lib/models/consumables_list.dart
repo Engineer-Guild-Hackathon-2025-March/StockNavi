@@ -10,11 +10,12 @@ class ConsumablesList {
     final db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> maps = await db.query('t_consumption');
 
-    _consumablesList =
-        maps.map((map) {
-          final consumption = Consumption.fromMap(map);
-          return Consumable.fromConsumption(consumption);
-        }).toList();
+    _consumablesList = await Future.wait(
+      maps.map((map) async {
+        final consumption = Consumption.fromMap(map);
+        return await Consumable.fromConsumptionWithTags(consumption);
+      }).toList(),
+    );
 
     return _consumablesList;
   }

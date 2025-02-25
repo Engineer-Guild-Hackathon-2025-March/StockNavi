@@ -2,6 +2,7 @@ import 'package:stocknavi/models/consumables_list.dart';
 import 'package:stocknavi/views/base_view.dart';
 import 'package:stocknavi/models/consumable.dart';
 import 'package:stocknavi/services/notification_service.dart';
+import 'package:stocknavi/database/database_helper.dart';
 
 class Controller {
   final ConsumablesList _allConsumablesList = ConsumablesList();
@@ -27,11 +28,25 @@ class Controller {
   Future<void> handleUserInput(String action, Map<String, dynamic> data) async {
     switch (action) {
       case 'add':
+        final db = await DatabaseHelper.instance.database;
+        final List<Map<String, dynamic>> maps = await db.query(
+          'm_average',
+          where: 'tag = ?',
+          whereArgs: [data['tag']],
+        );
+
+        double? dailyConsumption;
+        if (maps.isNotEmpty) {
+          dailyConsumption = maps.first['average_consumption'] as double?;
+        }
+
         final consumable = Consumable(
           name: data['name'],
           amount: data['amount'],
-          tags: data['tags'],
-          dailyConsumption: data['dailyConsumption'],
+          tags: [data['tag']],
+          dailyConsumption: dailyConsumption,
+          usagePerDay: data['usagePerDay'],
+          numberOfUsers: data['numberOfUsers'],
         );
         await _allConsumablesList.insertConsumable(consumable);
         break;
@@ -44,6 +59,8 @@ class Controller {
           amount: data['amount'],
           tags: data['tags'] ?? [],
           dailyConsumption: data['dailyConsumption'],
+          usagePerDay: data['usagePerDay'],
+          numberOfUsers: data['numberOfUsers'],
         );
         consumable.calculateDaysLeft(); // 残り日数を再計算
         await _allConsumablesList.updateConsumable(consumable);
@@ -91,6 +108,8 @@ class Controller {
         'amount': newAmount,
         'tags': item.tags,
         'dailyConsumption': item.dailyConsumption,
+        'usagePerDay': item.usagePerDay,
+        'numberOfUsers': item.numberOfUsers,
       });
     }
   }
@@ -107,6 +126,8 @@ class Controller {
         'amount': fullAmount,
         'tags': item.tags,
         'dailyConsumption': item.dailyConsumption,
+        'usagePerDay': item.usagePerDay,
+        'numberOfUsers': item.numberOfUsers,
       });
     }
   }
@@ -126,6 +147,8 @@ class Controller {
         'amount': item.amount,
         'tags': item.tags,
         'dailyConsumption': newDailyConsumption,
+        'usagePerDay': item.usagePerDay,
+        'numberOfUsers': item.numberOfUsers,
       });
     }
   }

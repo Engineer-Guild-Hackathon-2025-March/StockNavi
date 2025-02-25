@@ -40,10 +40,39 @@ class DatabaseHelper {
         days_left REAL NOT NULL,
         amount REAL NOT NULL,
         daily_consumption REAL,
+        usage_per_day INTEGER NOT NULL,
+        number_of_users INTEGER NOT NULL,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
         FOREIGN KEY (m_average_id) REFERENCES m_average (id)
       )
     ''');
+
+    await _insertDefaultAverages(db);
+  }
+
+  Future<void> _insertDefaultAverages(Database db) async {
+    final defaultAverages = [
+      {'tag': 'シャンプー', 'average_consumption': 6.0, 'unit': 'ml'},
+      {'tag': 'ボディウォッシュ', 'average_consumption': 6.0, 'unit': 'ml'},
+      {'tag': '洗濯洗剤（粉末）', 'average_consumption': 14.0, 'unit': 'g'},
+      {'tag': '洗濯洗剤（液体）', 'average_consumption': 7.0, 'unit': 'g'},
+      {'tag': '柔軟剤', 'average_consumption': 8.5, 'unit': 'ml'},
+      {'tag': '食器用洗剤', 'average_consumption': 8.0, 'unit': 'ml'},
+      {'tag': 'トイレットペーパー', 'average_consumption': 320.0, 'unit': 'cm'},
+      {'tag': '歯磨き粉', 'average_consumption': 2.0, 'unit': 'g'},
+      {'tag': '化粧水', 'average_consumption': 4.0, 'unit': 'ml'},
+      {'tag': 'テッシュ', 'average_consumption': 7.0, 'unit': '枚'},
+    ];
+
+    for (var average in defaultAverages) {
+      await db.insert('m_average', {
+        'tag': average['tag'],
+        'average_consumption': average['average_consumption'],
+        'unit': average['unit'],
+        'created_at': DateTime.now().toIso8601String(),
+        'updated_at': DateTime.now().toIso8601String(),
+      });
+    }
   }
 }

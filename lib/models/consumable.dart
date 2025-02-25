@@ -1,4 +1,5 @@
 import 'package:stocknavi/models/consumption.dart';
+import 'package:stocknavi/database/database_helper.dart';
 
 class Consumable {
   double amount;
@@ -6,6 +7,8 @@ class Consumable {
   List<String> tags;
   double? dailyConsumption;
   double daysLeft;
+  int usagePerDay;
+  int numberOfUsers;
 
   Consumable({
     required this.amount,
@@ -13,38 +16,70 @@ class Consumable {
     required this.tags,
     this.dailyConsumption,
     this.daysLeft = 0,
+    required this.usagePerDay,
+    required this.numberOfUsers,
   });
 
   double calculateAmount() {
-    return amount - (dailyConsumption ?? 0);
+    return amount - (dailyConsumption ?? 0) * usagePerDay * numberOfUsers;
   }
 
   void calculateDaysLeft() {
     if (dailyConsumption != null && dailyConsumption! > 0) {
-      daysLeft = amount / dailyConsumption!;
+      daysLeft = amount / (dailyConsumption! * usagePerDay * numberOfUsers);
     }
   }
 
-  // ConsumptionモデルからConsumableを作成するファクトリメソッド
   factory Consumable.fromConsumption(Consumption consumption) {
     return Consumable(
       amount: consumption.amount,
       name: consumption.name,
-      tags: [], // タグはm_averageから取得する必要があります
+      tags: [],
       dailyConsumption: consumption.dailyConsumption,
       daysLeft: consumption.daysLeft,
+      usagePerDay: consumption.usagePerDay,
+      numberOfUsers: consumption.numberOfUsers,
     );
   }
 
-  // Consumptionモデルへの変換メソッド
+  static Future<Consumable> fromConsumptionWithTags(
+    Consumption consumption,
+  ) async {
+    final db = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'm_average',
+      where: 'id = ?',
+      whereArgs: [consumption.mAverageId],
+    );
+
+    List<String> tags = [];
+    double? dailyConsumption;
+    if (maps.isNotEmpty) {
+      tags = [maps.first['tag'] as String];
+      dailyConsumption = maps.first['average_consumption'] as double?;
+    }
+
+    return Consumable(
+      amount: consumption.amount,
+      name: consumption.name,
+      tags: tags,
+      dailyConsumption: dailyConsumption,
+      daysLeft: consumption.daysLeft,
+      usagePerDay: consumption.usagePerDay,
+      numberOfUsers: consumption.numberOfUsers,
+    );
+  }
+
   Consumption toConsumption({required int mAverageId}) {
     return Consumption(
-      id: 0, // 新規作成時は0を指定
+      id: 0,
       name: name,
       mAverageId: mAverageId,
       daysLeft: daysLeft,
       amount: amount,
       dailyConsumption: dailyConsumption,
+      usagePerDay: usagePerDay,
+      numberOfUsers: numberOfUsers,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
