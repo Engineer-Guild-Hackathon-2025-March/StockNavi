@@ -8,11 +8,11 @@ class EditDialog extends StatefulWidget {
   final bool isPurchase;
 
   const EditDialog({
-    Key? key,
+    super.key,
     required this.consumable,
     required this.controller,
     this.isPurchase = false,
-  }) : super(key: key);
+  });
 
   @override
   _EditDialogState createState() => _EditDialogState();
