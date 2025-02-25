@@ -71,12 +71,12 @@ class Controller {
             .where((item) => item.daysLeft <= 7)
             .toList();
 
-    for (var item in runningOutItems) {
+    /*for (var item in runningOutItems) {
       _notificationService.scheduleRunningOutNotification(
         item.name,
         item.daysLeft.toInt(),
       );
-    }
+    }*/
   }
 
   // 手動で残量を更新するメソッド

@@ -57,7 +57,7 @@ class NotificationService {
     );
   }
 
-  Future<void> scheduleRunningOutNotification(
+  /*Future<void> scheduleRunningOutNotification(
     String itemName,
     int daysLeft,
   ) async {
@@ -84,9 +84,12 @@ class NotificationService {
         notificationDetails,
       );
     }
-  }
+  }*/
 
   tz.TZDateTime _nextInstanceOfSunday10AM() {
+    tz_data.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation("Asia/Tokyo"));
+
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(
       tz.local,
