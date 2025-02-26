@@ -20,9 +20,12 @@ class ConsumablesList {
     return _consumablesList;
   }
 
-  Future<void> insertConsumable(Consumable consumable) async {
+  Future<void> insertConsumable(
+    Consumable consumable, {
+    int mAverageId = 1,
+  }) async {
     final db = await DatabaseHelper.instance.database;
-    final consumption = consumable.toConsumption(mAverageId: 1);
+    final consumption = consumable.toConsumption(mAverageId: mAverageId);
 
     await db.insert(
       't_consumption',

@@ -36,8 +36,12 @@ class Controller {
         );
 
         double? dailyConsumption;
+        int? mAverageId;
+        String? unit;
         if (maps.isNotEmpty) {
           dailyConsumption = maps.first['average_consumption'] as double?;
+          mAverageId = maps.first['id'] as int?;
+          unit = maps.first['unit'] as String?;
         }
 
         final consumable = Consumable(
@@ -48,7 +52,14 @@ class Controller {
           usagePerDay: data['usagePerDay'],
           numberOfUsers: data['numberOfUsers'],
         );
-        await _allConsumablesList.insertConsumable(consumable);
+
+        // 残り日数を計算
+        consumable.calculateDaysLeft();
+
+        await _allConsumablesList.insertConsumable(
+          consumable,
+          mAverageId: mAverageId ?? 1,
+        );
         break;
       case 'delete':
         await _allConsumablesList.deleteConsumable(data['name']);
