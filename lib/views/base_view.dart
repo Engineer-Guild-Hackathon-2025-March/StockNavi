@@ -16,6 +16,7 @@ class BaseViewState extends State<BaseView> {
   List<Consumable> _consumables = [];
   Controller? _controller;
   List<String> _tags = [];
+  String? selectedTag;
 
   @override
   void initState() {
@@ -70,7 +71,6 @@ class BaseViewState extends State<BaseView> {
     final amountController = TextEditingController();
     final usagePerDayController = TextEditingController();
     final numberOfUsersController = TextEditingController();
-    String? selectedTag;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
