@@ -25,6 +25,21 @@ class Controller {
     await _notificationService.scheduleWeeklyReminder();
   }
 
+  // タグに基づいてmAverageIdを取得するヘルパーメソッド
+  Future<int> _getMaverageIdFromTag(String tag) async {
+    final db = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'm_average',
+      where: 'tag = ?',
+      whereArgs: [tag],
+    );
+
+    if (maps.isNotEmpty) {
+      return maps.first['id'] as int;
+    }
+    return 1; // デフォルト値
+  }
+
   Future<void> handleUserInput(String action, Map<String, dynamic> data) async {
     switch (action) {
       case 'add':
@@ -65,6 +80,14 @@ class Controller {
         await _allConsumablesList.deleteConsumable(data['name']);
         break;
       case 'update':
+        // タグからmAverageIdを取得
+        int mAverageId = 1;
+        if (data['tags'] != null && (data['tags'] as List).isNotEmpty) {
+          mAverageId = await _getMaverageIdFromTag(
+            (data['tags'] as List<String>)[0],
+          );
+        }
+
         final consumable = Consumable(
           name: data['name'],
           amount: data['amount'],
@@ -74,7 +97,10 @@ class Controller {
           numberOfUsers: data['numberOfUsers'],
         );
         consumable.calculateDaysLeft(); // 残り日数を再計算
-        await _allConsumablesList.updateConsumable(consumable);
+        await _allConsumablesList.updateConsumable(
+          consumable,
+          mAverageId: mAverageId,
+        );
         break;
     }
     updateView();

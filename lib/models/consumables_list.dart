@@ -22,7 +22,7 @@ class ConsumablesList {
 
   Future<void> insertConsumable(
     Consumable consumable, {
-    int mAverageId = 1,
+    required int mAverageId,
   }) async {
     final db = await DatabaseHelper.instance.database;
     final consumption = consumable.toConsumption(mAverageId: mAverageId);
@@ -36,15 +36,12 @@ class ConsumablesList {
     await fetchAllConsumable();
   }
 
-  Future<void> deleteConsumable(String name) async {
+  Future<void> updateConsumable(
+    Consumable consumable, {
+    required int mAverageId,
+  }) async {
     final db = await DatabaseHelper.instance.database;
-    await db.delete('t_consumption', where: 'name = ?', whereArgs: [name]);
-    await fetchAllConsumable();
-  }
-
-  Future<void> updateConsumable(Consumable consumable) async {
-    final db = await DatabaseHelper.instance.database;
-    final consumption = consumable.toConsumption(mAverageId: 1);
+    final consumption = consumable.toConsumption(mAverageId: mAverageId);
 
     await db.update(
       't_consumption',
@@ -53,6 +50,12 @@ class ConsumablesList {
       whereArgs: [consumable.name],
     );
 
+    await fetchAllConsumable();
+  }
+
+  Future<void> deleteConsumable(String name) async {
+    final db = await DatabaseHelper.instance.database;
+    await db.delete('t_consumption', where: 'name = ?', whereArgs: [name]);
     await fetchAllConsumable();
   }
 
