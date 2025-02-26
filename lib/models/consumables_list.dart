@@ -25,11 +25,14 @@ class ConsumablesList {
     required int mAverageId,
   }) async {
     final db = await DatabaseHelper.instance.database;
-    final consumption = consumable.toConsumption(mAverageId: mAverageId);
+
+    final Map<String, dynamic> consumptionMap =
+        consumable.toConsumption(mAverageId: mAverageId).toMap();
+    consumptionMap.remove('id');
 
     await db.insert(
       't_consumption',
-      consumption.toMap(),
+      consumptionMap,
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
@@ -43,9 +46,12 @@ class ConsumablesList {
     final db = await DatabaseHelper.instance.database;
     final consumption = consumable.toConsumption(mAverageId: mAverageId);
 
+    final Map<String, dynamic> consumptionMap = consumption.toMap();
+    consumptionMap.remove('id');
+
     await db.update(
       't_consumption',
-      consumption.toMap(),
+      consumptionMap,
       where: 'name = ?',
       whereArgs: [consumable.name],
     );
