@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stocknavi/models/consumable.dart';
 import 'package:stocknavi/views/edit_dialog.dart';
+import 'package:stocknavi/views/edit_item_page.dart';
 import 'package:stocknavi/controllers/controller.dart';
 
 class ConsumableTable {
@@ -31,13 +32,15 @@ class ConsumableTable {
                         IconButton(
                           icon: Icon(Icons.edit),
                           onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder:
-                                  (context) => EditDialog(
-                                    consumable: consumable,
-                                    controller: controller,
-                                  ),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => EditItemPage(
+                                      consumable: consumable,
+                                      controller: controller,
+                                    ),
+                              ),
                             );
                           },
                         ),
