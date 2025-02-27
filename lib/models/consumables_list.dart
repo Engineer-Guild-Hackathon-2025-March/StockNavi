@@ -20,14 +20,40 @@ class ConsumablesList {
     return _consumablesList;
   }
 
-  Future<void> insertConsumable(Consumable consumable) async {
+  Future<void> insertConsumable(
+    Consumable consumable, {
+    required int mAverageId,
+  }) async {
     final db = await DatabaseHelper.instance.database;
-    final consumption = consumable.toConsumption(mAverageId: 1);
+
+    final Map<String, dynamic> consumptionMap =
+        consumable.toConsumption(mAverageId: mAverageId).toMap();
+    consumptionMap.remove('id');
 
     await db.insert(
       't_consumption',
-      consumption.toMap(),
+      consumptionMap,
       conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    await fetchAllConsumable();
+  }
+
+  Future<void> updateConsumable(
+    Consumable consumable, {
+    required int mAverageId,
+  }) async {
+    final db = await DatabaseHelper.instance.database;
+    final consumption = consumable.toConsumption(mAverageId: mAverageId);
+
+    final Map<String, dynamic> consumptionMap = consumption.toMap();
+    consumptionMap.remove('id');
+
+    await db.update(
+      't_consumption',
+      consumptionMap,
+      where: 'name = ?',
+      whereArgs: [consumable.name],
     );
 
     await fetchAllConsumable();
@@ -36,20 +62,6 @@ class ConsumablesList {
   Future<void> deleteConsumable(String name) async {
     final db = await DatabaseHelper.instance.database;
     await db.delete('t_consumption', where: 'name = ?', whereArgs: [name]);
-    await fetchAllConsumable();
-  }
-
-  Future<void> updateConsumable(Consumable consumable) async {
-    final db = await DatabaseHelper.instance.database;
-    final consumption = consumable.toConsumption(mAverageId: 1);
-
-    await db.update(
-      't_consumption',
-      consumption.toMap(),
-      where: 'name = ?',
-      whereArgs: [consumable.name],
-    );
-
     await fetchAllConsumable();
   }
 
