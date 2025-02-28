@@ -4,6 +4,8 @@ import 'package:stocknavi/views/table_view.dart';
 import 'package:stocknavi/controllers/controller.dart';
 import 'package:stocknavi/database/database_helper.dart';
 
+import 'add_item_page.dart';
+
 class BaseView extends StatefulWidget {
   const BaseView({super.key});
 
@@ -14,7 +16,7 @@ class BaseView extends StatefulWidget {
 class BaseViewState extends State<BaseView> {
   late final ConsumableTable _table;
   List<Consumable> _consumables = [];
-  Controller? _controller;
+  late Controller _controller;
   List<String> _tags = [];
   String? selectedTag;
 
@@ -22,11 +24,16 @@ class BaseViewState extends State<BaseView> {
   void initState() {
     super.initState();
     _loadTags();
+    _controller = Controller(this);
+    _table = ConsumableTable(controller: _controller);
   }
 
   void setController(Controller controller) {
     _controller = controller;
-    _table = ConsumableTable(controller: controller);
+  }
+
+  Controller getController() {
+    return _controller;
   }
 
   void updateTable(List<Consumable> consumables) {
@@ -57,11 +64,33 @@ class BaseViewState extends State<BaseView> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Stock Navi')),
-      body: SingleChildScrollView(
+      appBar: AppBar(
+        title: const Text(
+          'Stock Navi',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.blue.shade100,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+        child: _table.build(context, _consumables),
+      ),
+      /*body: SingleChildScrollView(
         child: Column(
           children: [_table.build(context, _consumables), _buildAddItemForm()],
         ),
+      ),*/
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddItemPage(controller: getController()),
+            ),
+          );
+        },
       ),
     );
   }

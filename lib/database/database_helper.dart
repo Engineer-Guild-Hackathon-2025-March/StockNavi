@@ -46,6 +46,7 @@ class DatabaseHelper {
         number_of_users INTEGER NOT NULL,
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL,
+        initial_amount REAL NOT NULL, 
         FOREIGN KEY (m_average_id) REFERENCES m_average (id)
       )
     ''');

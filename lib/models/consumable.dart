@@ -9,6 +9,9 @@ class Consumable {
   double daysLeft;
   int usagePerDay;
   int numberOfUsers;
+  DateTime createdAt;
+  DateTime updatedAt;
+  double initialAmount;
 
   Consumable({
     required this.amount,
@@ -18,10 +21,20 @@ class Consumable {
     this.daysLeft = 0,
     required this.usagePerDay,
     required this.numberOfUsers,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.initialAmount,
   });
 
-  double calculateAmount() {
-    return amount - (dailyConsumption ?? 0) * usagePerDay * numberOfUsers;
+  void calculateAmount() {
+    final elapsedDays = DateTime.now().difference(updatedAt);
+    final resAmount =
+        amount -
+        (dailyConsumption ?? 0) *
+            usagePerDay *
+            numberOfUsers *
+            (elapsedDays.inHours / 24);
+    amount = double.parse(resAmount.toStringAsFixed(2));
   }
 
   void calculateDaysLeft() {
@@ -39,6 +52,9 @@ class Consumable {
       daysLeft: consumption.daysLeft,
       usagePerDay: consumption.usagePerDay,
       numberOfUsers: consumption.numberOfUsers,
+      createdAt: consumption.createdAt,
+      updatedAt: consumption.updatedAt,
+      initialAmount: consumption.initialAmount,
     );
   }
 
@@ -67,6 +83,9 @@ class Consumable {
       daysLeft: consumption.daysLeft,
       usagePerDay: consumption.usagePerDay,
       numberOfUsers: consumption.numberOfUsers,
+      createdAt: consumption.createdAt,
+      updatedAt: consumption.updatedAt,
+      initialAmount: consumption.initialAmount,
     );
   }
 
@@ -82,6 +101,7 @@ class Consumable {
       numberOfUsers: numberOfUsers,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
+      initialAmount: initialAmount,
     );
   }
 }

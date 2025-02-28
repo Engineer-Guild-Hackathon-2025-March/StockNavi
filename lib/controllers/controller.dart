@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:math' as Log;
+
 import 'package:stocknavi/models/consumables_list.dart';
 import 'package:stocknavi/views/base_view.dart';
 import 'package:stocknavi/models/consumable.dart';
@@ -22,7 +25,6 @@ class Controller {
 
   Future<void> _initializeNotifications() async {
     await _notificationService.initNotification();
-    await _notificationService.scheduleWeeklyReminder();
   }
 
   // タグに基づいてmAverageIdを取得するヘルパーメソッド
@@ -66,6 +68,9 @@ class Controller {
           dailyConsumption: dailyConsumption,
           usagePerDay: data['usagePerDay'],
           numberOfUsers: data['numberOfUsers'],
+          createdAt: data['createdAt'],
+          updatedAt: data['updatedAt'],
+          initialAmount: data['amount'],
         );
 
         // 残り日数を計算
@@ -95,8 +100,13 @@ class Controller {
           dailyConsumption: data['dailyConsumption'],
           usagePerDay: data['usagePerDay'],
           numberOfUsers: data['numberOfUsers'],
+          createdAt: data['createdAt'],
+          updatedAt: data['updatedAt'],
+          initialAmount: data['initialAmount'],
         );
+        consumable.calculateAmount(); //残り容量を再計算
         consumable.calculateDaysLeft(); // 残り日数を再計算
+        consumable.updatedAt = DateTime.now();
         await _allConsumablesList.updateConsumable(
           consumable,
           mAverageId: mAverageId,
@@ -125,12 +135,9 @@ class Controller {
             .where((item) => item.daysLeft <= 7)
             .toList();
 
-    /*for (var item in runningOutItems) {
-      _notificationService.scheduleRunningOutNotification(
-        item.name,
-        item.daysLeft.toInt(),
-      );
-    }*/
+    if (runningOutItems.isNotEmpty) {
+      _notificationService.scheduleWeeklyReminder(runningOutItems.length);
+    }
   }
 
   // 手動で残量を更新するメソッド
@@ -147,6 +154,9 @@ class Controller {
         'dailyConsumption': item.dailyConsumption,
         'usagePerDay': item.usagePerDay,
         'numberOfUsers': item.numberOfUsers,
+        'createdAt': item.createdAt,
+        'updatedAt': item.updatedAt,
+        'initialAmount': item.initialAmount,
       });
     }
   }
@@ -165,28 +175,24 @@ class Controller {
         'dailyConsumption': item.dailyConsumption,
         'usagePerDay': item.usagePerDay,
         'numberOfUsers': item.numberOfUsers,
+        'createdAt': item.createdAt,
+        'updatedAt': item.updatedAt,
+        'initialAmount': item.initialAmount,
       });
     }
   }
 
   // 消費量の予測値を更新する
-  Future<void> updateDailyConsumption(
-    String name,
-    double newDailyConsumption,
-  ) async {
-    final items = _allConsumablesList.getConsumablesList();
-    final itemIndex = items.indexWhere((item) => item.name == name);
-
-    if (itemIndex != -1) {
-      final item = items[itemIndex];
-      await handleUserInput('update', {
-        'name': name,
-        'amount': item.amount,
-        'tags': item.tags,
-        'dailyConsumption': newDailyConsumption,
-        'usagePerDay': item.usagePerDay,
-        'numberOfUsers': item.numberOfUsers,
-      });
+  Future<void> updateDailyConsumption(Consumable item) async {
+    final elapsedDays = DateTime.now().difference(item.createdAt);
+    if (elapsedDays.inDays < 1) {
+      return;
     }
+
+    double newDailyConsumption =
+        item.initialAmount / (elapsedDays.inHours / 24);
+    item.dailyConsumption = double.parse(
+      ((item.dailyConsumption! + newDailyConsumption) / 2).toStringAsFixed(3),
+    );
   }
 }
