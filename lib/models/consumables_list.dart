@@ -13,7 +13,13 @@ class ConsumablesList {
     _consumablesList = await Future.wait(
       maps.map((map) async {
         final consumption = Consumption.fromMap(map);
-        return await Consumable.fromConsumptionWithTags(consumption);
+        final consumable = await Consumable.fromConsumptionWithTags(
+          consumption,
+        );
+        consumable.calculateAmount();
+        consumable.calculateDaysLeft();
+        consumable.updatedAt = DateTime.now();
+        return consumable;
       }).toList(),
     );
 

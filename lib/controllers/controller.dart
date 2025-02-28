@@ -26,7 +26,6 @@ class Controller {
 
   Future<void> _initializeNotifications() async {
     await _notificationService.initNotification();
-    await _notificationService.scheduleWeeklyReminder();
   }
 
   // タグに基づいてmAverageIdを取得するヘルパーメソッド
@@ -137,12 +136,9 @@ class Controller {
             .where((item) => item.daysLeft <= 7)
             .toList();
 
-    /*for (var item in runningOutItems) {
-      _notificationService.scheduleRunningOutNotification(
-        item.name,
-        item.daysLeft.toInt(),
-      );
-    }*/
+    if (runningOutItems.isNotEmpty) {
+      _notificationService.scheduleWeeklyReminder(runningOutItems.length);
+    }
   }
 
   // 手動で残量を更新するメソッド

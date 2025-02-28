@@ -27,7 +27,7 @@ class NotificationService {
     await notificationsPlugin.initialize(initializationSettings);
   }
 
-  Future<void> scheduleWeeklyReminder() async {
+  Future<void> scheduleWeeklyReminder(int number) async {
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
           'weekly_reminder',
@@ -46,8 +46,8 @@ class NotificationService {
     // 毎週日曜日の10時に通知
     await notificationsPlugin.zonedSchedule(
       1,
-      '在庫確認のお知らせ',
-      '消費品の在庫を確認してください',
+      '⚠️在庫が少なくなっています',
+      '在庫が少ない消耗品が$number個あります',
       _nextInstanceOfSunday10AM(),
       notificationDetails,
       androidAllowWhileIdle: true,
@@ -96,7 +96,7 @@ class NotificationService {
       now.year,
       now.month,
       now.day,
-      10, // 10AM
+      10,
     );
 
     while (scheduledDate.weekday != DateTime.sunday) {
