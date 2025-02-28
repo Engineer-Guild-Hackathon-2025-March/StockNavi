@@ -1,8 +1,14 @@
+import 'dart:developer';
+import 'dart:math' as Log;
+
+import 'package:flutter/cupertino.dart';
 import 'package:stocknavi/models/consumables_list.dart';
 import 'package:stocknavi/views/base_view.dart';
 import 'package:stocknavi/models/consumable.dart';
 import 'package:stocknavi/services/notification_service.dart';
 import 'package:stocknavi/database/database_helper.dart';
+
+import '../models/consumables_list.dart';
 
 class Controller {
   final ConsumablesList _allConsumablesList = ConsumablesList();
@@ -107,6 +113,27 @@ class Controller {
           consumable,
           mAverageId: mAverageId,
         );
+        break;
+      case 'insert':
+        int mAverageId = 1;
+        if (data['tags'] != null && (data['tags'] as List).isNotEmpty) {
+          mAverageId = await _getMaverageIdFromTag(
+            (data['tags'] as List<String>)[0],
+          );
+        }
+
+        final consumable = Consumable(
+          name: data['name'],
+          amount: data['amount'],
+          tags: data['tags'] ?? [],
+          dailyConsumption: data['dailyConsumption'],
+          usagePerDay: data['usagePerDay'],
+          numberOfUsers: data['numberOfUsers'],
+        );
+        consumable.fetchDefaultDailyConsumption(mAverageId);
+        consumable.calculateDaysLeft();
+        debugPrint("hello");
+        await _allConsumablesList.insertConsumable(consumable, mAverageId: mAverageId);
         break;
     }
     updateView();

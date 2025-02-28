@@ -102,4 +102,23 @@ class Consumable {
       updatedAt: DateTime.now(),
     );
   }
+
+  Future<void> fetchDefaultDailyConsumption(int id)async{
+    final db = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> result = await db.query(
+      'm_average',
+      columns: ['amount'],
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    // result が空でなければ、最初の行の 'amount' を返す
+    if (result.isNotEmpty) {
+      // もし amount が int 型である場合
+      dailyConsumption = result.first['amount'] as double;
+    } else {
+      // 見つからなかった場合は null を返す
+      dailyConsumption = 5.0;
+    }
+  }
 }
