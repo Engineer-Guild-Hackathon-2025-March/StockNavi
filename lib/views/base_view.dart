@@ -65,11 +65,18 @@ class BaseViewState extends State<BaseView> {
         centerTitle: true,
         backgroundColor: Colors.blue.shade100,
       ),
-      body: SingleChildScrollView(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+        child: _table.build(context, _consumables),
+      ),
+      /*body: SingleChildScrollView(
         child: Column(
           children: [_table.build(context, _consumables), _buildAddItemForm()],
-          //children: [_table.build(context, _consumables)],
         ),
+      ),*/
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {},
       ),
     );
   }

@@ -12,72 +12,81 @@ class ConsumableTable {
     consumables.sort((a, b) => a.daysLeft.compareTo(b.daysLeft));
 
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: DataTableTheme(
-        data: DataTableThemeData(
-          headingTextStyle: TextStyle(color: Colors.black, fontSize: 16),
-          headingRowHeight: 56, // ヘッダー行の高さ
-          dataRowMinHeight: 48, // データ行の最小高さ
-        ),
-        child: DataTable(
-          columnSpacing: 40, // カラム間のスペース調整
-          columns: [
-            DataColumn(
-              label: Expanded(
-                child: Text(
-                  '分類',
-                  textAlign: TextAlign.center, // **これだけでは機能しない**
+      scrollDirection: Axis.vertical,
+      child: Column(
+        children: [
+          DataTableTheme(
+            data: DataTableThemeData(
+              headingTextStyle: TextStyle(color: Colors.black, fontSize: 16),
+              headingRowHeight: 40, // ヘッダー行の高さ
+              dataRowMinHeight: 48, // データ行の最小高さ
+            ),
+            child: DataTable(
+              columnSpacing: 30, // カラム間のスペース調整
+              columns: [
+                DataColumn(
+                  label: Expanded(
+                    child: Text(
+                      '分類',
+                      textAlign: TextAlign.center, // **これだけでは機能しない**
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            DataColumn(
-              label: Expanded(child: Text('残り日数', textAlign: TextAlign.center)),
-            ),
-            DataColumn(
-              label: Expanded(child: Text('操作', textAlign: TextAlign.center)),
-            ),
-          ],
-          rows:
-              consumables.map((consumable) {
-                return DataRow(
-                  cells: [
-                    DataCell(Center(child: Text(consumable.tags[0]))),
-                    DataCell(
-                      Center(
-                        child: Text(
-                          '${consumable.daysLeft.toStringAsFixed(1)}日',
-                          style: TextStyle(
-                            color:
-                                consumable.daysLeft <= 7
-                                    ? Colors.red
-                                    : Colors.black,
+                DataColumn(
+                  label: Expanded(
+                    child: Text('残り日数', textAlign: TextAlign.center),
+                  ),
+                ),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('操作', textAlign: TextAlign.center),
+                  ),
+                ),
+              ],
+              rows:
+                  consumables.map((consumable) {
+                    return DataRow(
+                      cells: [
+                        DataCell(Center(child: Text(consumable.tags[0]))),
+                        DataCell(
+                          Center(
+                            child: Text(
+                              '${consumable.daysLeft.toStringAsFixed(1)}日',
+                              style: TextStyle(
+                                color:
+                                    consumable.daysLeft <= 7
+                                        ? Colors.red
+                                        : Colors.black,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    DataCell(
-                      Center(
-                        child: IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => EditItemPage(
-                                      consumable: consumable,
-                                      controller: controller,
-                                    ),
-                              ),
-                            );
-                          },
+                        DataCell(
+                          Center(
+                            child: IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => EditItemPage(
+                                          consumable: consumable,
+                                          controller: controller,
+                                        ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                );
-              }).toList(),
-        ),
+                      ],
+                    );
+                  }).toList(),
+            ),
+          ),
+          Container(height: 60),
+        ],
       ),
     );
   }
