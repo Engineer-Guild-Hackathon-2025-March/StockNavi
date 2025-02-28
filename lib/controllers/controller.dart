@@ -112,32 +112,6 @@ class Controller {
           mAverageId: mAverageId,
         );
         break;
-      case 'insert':
-        int mAverageId = 1;
-        if (data['tags'] != null && (data['tags'] as List).isNotEmpty) {
-          mAverageId = await _getMaverageIdFromTag(
-            (data['tags'] as List<String>)[0],
-          );
-        }
-
-        final consumable = Consumable(
-          name: data['name'],
-          amount: data['amount'],
-          tags: data['tags'] ?? [],
-          dailyConsumption: data['dailyConsumption'],
-          usagePerDay: data['usagePerDay'],
-          numberOfUsers: data['numberOfUsers'],
-          createdAt: data['createdAt'],
-          updatedAt: data['updatedAt'],
-        );
-        consumable.fetchDefaultDailyConsumption(mAverageId);
-        consumable.calculateDaysLeft();
-        debugPrint("hello");
-        await _allConsumablesList.insertConsumable(
-          consumable,
-          mAverageId: mAverageId,
-        );
-        break;
     }
     updateView();
   }

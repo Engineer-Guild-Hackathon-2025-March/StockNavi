@@ -9,7 +9,7 @@ class AddItemPage extends StatefulWidget {
     amount: 0,
     name: '',
     tags: [''],
-    usagePerDay: 0,
+    usagePerDay: 1,
     numberOfUsers: 1,
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
@@ -229,14 +229,12 @@ class _AddItemPageState extends State<AddItemPage> {
 
   void _insertItem() {
     try {
-      widget.controller.handleUserInput('insert', {
+      widget.controller.handleUserInput('add', {
         'name': nameController.text,
         'tag': selectedTag,
-        'tags': [selectedTag],
-        'amount': double.tryParse(amountController.text),
+        'amount': double.tryParse(amountController.text) ?? 0.0,
         'usagePerDay': int.tryParse(usagePerDayController.text) ?? 1,
         'numberOfUsers': int.tryParse(numberOfUsersController.text) ?? 1,
-        'dailyConsumption': widget.consumable.dailyConsumption,
         'createdAt': widget.consumable.createdAt,
         'updatedAt': widget.consumable.updatedAt,
       });
