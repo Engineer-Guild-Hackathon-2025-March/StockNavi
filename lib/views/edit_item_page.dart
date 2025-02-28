@@ -6,11 +6,13 @@ import 'package:stocknavi/database/database_helper.dart';
 class EditItemPage extends StatefulWidget {
   final Consumable consumable;
   final Controller controller;
+  final bool fromPurchase;
 
   const EditItemPage({
     super.key,
     required this.consumable,
     required this.controller,
+    required this.fromPurchase,
   });
 
   @override
@@ -31,6 +33,7 @@ class _EditItemPageState extends State<EditItemPage> {
   @override
   void initState() {
     super.initState();
+    isPurchased = widget.fromPurchase;
     nameController = TextEditingController(text: widget.consumable.name);
     amountController = TextEditingController(
       text: widget.consumable.amount.toString(),
@@ -91,12 +94,16 @@ class _EditItemPageState extends State<EditItemPage> {
   void _updateItem() {
     try {
       double amount;
+      double initialAmount;
       if (isPurchased) {
         final purchasedAmount = double.tryParse(amountController.text) ?? 0.0;
         amount = widget.consumable.amount + purchasedAmount;
+        initialAmount = amount;
+        widget.controller.updateDailyConsumption(widget.consumable);
       } else {
         amount =
             double.tryParse(amountController.text) ?? widget.consumable.amount;
+        initialAmount = widget.consumable.initialAmount;
       }
 
       widget.controller.handleUserInput('update', {
@@ -107,9 +114,13 @@ class _EditItemPageState extends State<EditItemPage> {
         'usagePerDay': int.tryParse(usagePerDayController.text) ?? 1,
         'numberOfUsers': int.tryParse(numberOfUsersController.text) ?? 1,
         'dailyConsumption': widget.consumable.dailyConsumption,
-        'createdAt': widget.consumable.createdAt,
-        'updatedAt': widget.consumable.updatedAt,
+        'createdAt': DateTime.now(),
+        'updatedAt': DateTime.now(),
+        'initialAmount': initialAmount,
       });
+
+      print(widget.consumable.dailyConsumption);
+      print(widget.consumable.createdAt);
 
       Navigator.pop(context);
     } catch (e) {

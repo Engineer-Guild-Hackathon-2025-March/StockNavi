@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'dart:math' as Log;
 
-import 'package:flutter/cupertino.dart';
 import 'package:stocknavi/models/consumables_list.dart';
 import 'package:stocknavi/views/base_view.dart';
 import 'package:stocknavi/models/consumable.dart';
@@ -184,26 +183,16 @@ class Controller {
   }
 
   // 消費量の予測値を更新する
-  Future<void> updateDailyConsumption(
-    String name,
-    double newDailyConsumption,
-  ) async {
-    final items = _allConsumablesList.getConsumablesList();
-    final itemIndex = items.indexWhere((item) => item.name == name);
-
-    if (itemIndex != -1) {
-      final item = items[itemIndex];
-      await handleUserInput('update', {
-        'name': name,
-        'amount': item.amount,
-        'tags': item.tags,
-        'dailyConsumption': newDailyConsumption,
-        'usagePerDay': item.usagePerDay,
-        'numberOfUsers': item.numberOfUsers,
-        'createdAt': item.createdAt,
-        'updatedAt': item.updatedAt,
-        'initialAmount': item.initialAmount,
-      });
+  Future<void> updateDailyConsumption(Consumable item) async {
+    final elapsedDays = DateTime.now().difference(item.createdAt);
+    if (elapsedDays.inDays < 1) {
+      return;
     }
+
+    double newDailyConsumption =
+        item.initialAmount / (elapsedDays.inHours / 24);
+    item.dailyConsumption = double.parse(
+      ((item.dailyConsumption! + newDailyConsumption) / 2).toStringAsFixed(3),
+    );
   }
 }

@@ -11,6 +11,19 @@ class ConsumableTable {
   Widget build(BuildContext context, List<Consumable> consumables) {
     consumables.sort((a, b) => a.daysLeft.compareTo(b.daysLeft));
 
+    if (consumables.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Text(
+            'まだ何も消耗品を登録していません\n右下の+ボタンから登録してみましょう',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+        ),
+      );
+    }
+
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Column(
@@ -22,7 +35,7 @@ class ConsumableTable {
               dataRowMinHeight: 48, // データ行の最小高さ
             ),
             child: DataTable(
-              columnSpacing: 30, // カラム間のスペース調整
+              columnSpacing: 10, // カラム間のスペース調整
               columns: [
                 DataColumn(
                   label: Expanded(
@@ -35,7 +48,9 @@ class ConsumableTable {
                   ),
                 ),
                 DataColumn(
-                  label: Expanded(child: Text('', textAlign: TextAlign.center)),
+                  label: Expanded(
+                    child: Text('操作', textAlign: TextAlign.center),
+                  ),
                 ),
               ],
               rows:
@@ -46,7 +61,7 @@ class ConsumableTable {
                         DataCell(
                           Center(
                             child: Text(
-                              '${consumable.daysLeft.toStringAsFixed(1)}日',
+                              '${consumable.daysLeft.toStringAsFixed(0)}日',
                               style: TextStyle(
                                 color:
                                     consumable.daysLeft <= 7
@@ -57,22 +72,45 @@ class ConsumableTable {
                           ),
                         ),
                         DataCell(
-                          Center(
-                            child: IconButton(
-                              icon: Icon(Icons.edit),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => EditItemPage(
-                                          consumable: consumable,
-                                          controller: controller,
-                                        ),
-                                  ),
-                                );
-                              },
-                            ),
+                          Row(
+                            children: [
+                              Center(
+                                child: IconButton(
+                                  icon: Icon(Icons.edit),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => EditItemPage(
+                                              consumable: consumable,
+                                              controller: controller,
+                                              fromPurchase: false,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              Center(
+                                child: IconButton(
+                                  icon: Icon(Icons.shopping_cart),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => EditItemPage(
+                                              consumable: consumable,
+                                              controller: controller,
+                                              fromPurchase: true,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
