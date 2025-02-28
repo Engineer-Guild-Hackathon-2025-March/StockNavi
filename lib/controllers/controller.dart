@@ -71,6 +71,7 @@ class Controller {
           numberOfUsers: data['numberOfUsers'],
           createdAt: data['createdAt'],
           updatedAt: data['updatedAt'],
+          initialAmount: data['amount'],
         );
 
         // 残り日数を計算
@@ -102,6 +103,7 @@ class Controller {
           numberOfUsers: data['numberOfUsers'],
           createdAt: data['createdAt'],
           updatedAt: data['updatedAt'],
+          initialAmount: data['initialAmount'],
         );
         consumable.calculateAmount(); //残り容量を再計算
         consumable.calculateDaysLeft(); // 残り日数を再計算
@@ -155,6 +157,7 @@ class Controller {
         'numberOfUsers': item.numberOfUsers,
         'createdAt': item.createdAt,
         'updatedAt': item.updatedAt,
+        'initialAmount': item.initialAmount,
       });
     }
   }
@@ -175,6 +178,7 @@ class Controller {
         'numberOfUsers': item.numberOfUsers,
         'createdAt': item.createdAt,
         'updatedAt': item.updatedAt,
+        'initialAmount': item.initialAmount,
       });
     }
   }
@@ -198,6 +202,7 @@ class Controller {
         'numberOfUsers': item.numberOfUsers,
         'createdAt': item.createdAt,
         'updatedAt': item.updatedAt,
+        'initialAmount': item.initialAmount,
       });
     }
   }
