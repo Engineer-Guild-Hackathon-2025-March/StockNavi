@@ -57,10 +57,18 @@ class BaseViewState extends State<BaseView> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Stock Navi')),
+      appBar: AppBar(
+        title: const Text(
+          'Stock Navi',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.blue.shade100,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [_table.build(context, _consumables), _buildAddItemForm()],
+          //children: [_table.build(context, _consumables)],
         ),
       ),
     );

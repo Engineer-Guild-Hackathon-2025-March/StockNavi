@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stocknavi/models/consumable.dart';
-import 'package:stocknavi/views/edit_dialog.dart';
 import 'package:stocknavi/views/edit_item_page.dart';
 import 'package:stocknavi/controllers/controller.dart';
 
@@ -10,26 +9,55 @@ class ConsumableTable {
   ConsumableTable({required this.controller});
 
   Widget build(BuildContext context, List<Consumable> consumables) {
+    consumables.sort((a, b) => a.daysLeft.compareTo(b.daysLeft));
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child: DataTable(
-        columns: [
-          DataColumn(label: Text('商品名')),
-          DataColumn(label: Text('残量')),
-          DataColumn(label: Text('残り日数')),
-          DataColumn(label: Text('操作')),
-        ],
-        rows:
-            consumables.map((consumable) {
-              return DataRow(
-                cells: [
-                  DataCell(Text(consumable.name)),
-                  DataCell(Text('${consumable.amount}ml')),
-                  DataCell(Text('${consumable.daysLeft.toStringAsFixed(1)}日')),
-                  DataCell(
-                    Row(
-                      children: [
-                        IconButton(
+      child: DataTableTheme(
+        data: DataTableThemeData(
+          headingTextStyle: TextStyle(color: Colors.black, fontSize: 16),
+          headingRowHeight: 56, // ヘッダー行の高さ
+          dataRowMinHeight: 48, // データ行の最小高さ
+        ),
+        child: DataTable(
+          columnSpacing: 40, // カラム間のスペース調整
+          columns: [
+            DataColumn(
+              label: Expanded(
+                child: Text(
+                  '分類',
+                  textAlign: TextAlign.center, // **これだけでは機能しない**
+                ),
+              ),
+            ),
+            DataColumn(
+              label: Expanded(child: Text('残り日数', textAlign: TextAlign.center)),
+            ),
+            DataColumn(
+              label: Expanded(child: Text('操作', textAlign: TextAlign.center)),
+            ),
+          ],
+          rows:
+              consumables.map((consumable) {
+                return DataRow(
+                  cells: [
+                    DataCell(Center(child: Text(consumable.tags[0]))),
+                    DataCell(
+                      Center(
+                        child: Text(
+                          '${consumable.daysLeft.toStringAsFixed(1)}日',
+                          style: TextStyle(
+                            color:
+                                consumable.daysLeft <= 7
+                                    ? Colors.red
+                                    : Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                    DataCell(
+                      Center(
+                        child: IconButton(
                           icon: Icon(Icons.edit),
                           onPressed: () {
                             Navigator.push(
@@ -44,34 +72,12 @@ class ConsumableTable {
                             );
                           },
                         ),
-                        IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () {
-                            controller.handleUserInput('delete', {
-                              'name': consumable.name,
-                            });
-                          },
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.shopping_cart),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder:
-                                  (context) => EditDialog(
-                                    consumable: consumable,
-                                    controller: controller,
-                                    isPurchase: true,
-                                  ),
-                            );
-                          },
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
-              );
-            }).toList(),
+                  ],
+                );
+              }).toList(),
+        ),
       ),
     );
   }
