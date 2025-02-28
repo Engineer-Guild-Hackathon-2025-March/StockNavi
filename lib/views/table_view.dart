@@ -26,10 +26,7 @@ class ConsumableTable {
               columns: [
                 DataColumn(
                   label: Expanded(
-                    child: Text(
-                      '分類',
-                      textAlign: TextAlign.center, // **これだけでは機能しない**
-                    ),
+                    child: Text('分類', textAlign: TextAlign.center),
                   ),
                 ),
                 DataColumn(
@@ -38,9 +35,7 @@ class ConsumableTable {
                   ),
                 ),
                 DataColumn(
-                  label: Expanded(
-                    child: Text('操作', textAlign: TextAlign.center),
-                  ),
+                  label: Expanded(child: Text('', textAlign: TextAlign.center)),
                 ),
               ],
               rows:

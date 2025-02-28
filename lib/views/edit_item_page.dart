@@ -107,6 +107,8 @@ class _EditItemPageState extends State<EditItemPage> {
         'usagePerDay': int.tryParse(usagePerDayController.text) ?? 1,
         'numberOfUsers': int.tryParse(numberOfUsersController.text) ?? 1,
         'dailyConsumption': widget.consumable.dailyConsumption,
+        'createdAt': widget.consumable.createdAt,
+        'updatedAt': widget.consumable.updatedAt,
       });
 
       Navigator.pop(context);

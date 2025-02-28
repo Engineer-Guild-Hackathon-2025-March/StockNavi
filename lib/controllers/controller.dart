@@ -66,6 +66,8 @@ class Controller {
           dailyConsumption: dailyConsumption,
           usagePerDay: data['usagePerDay'],
           numberOfUsers: data['numberOfUsers'],
+          createdAt: data['createdAt'],
+          updatedAt: data['updatedAt'],
         );
 
         // 残り日数を計算
@@ -95,8 +97,12 @@ class Controller {
           dailyConsumption: data['dailyConsumption'],
           usagePerDay: data['usagePerDay'],
           numberOfUsers: data['numberOfUsers'],
+          createdAt: data['createdAt'],
+          updatedAt: data['updatedAt'],
         );
+        consumable.calculateAmount(); //残り容量を再計算
         consumable.calculateDaysLeft(); // 残り日数を再計算
+        consumable.updatedAt = DateTime.now();
         await _allConsumablesList.updateConsumable(
           consumable,
           mAverageId: mAverageId,
@@ -147,6 +153,8 @@ class Controller {
         'dailyConsumption': item.dailyConsumption,
         'usagePerDay': item.usagePerDay,
         'numberOfUsers': item.numberOfUsers,
+        'createdAt': item.createdAt,
+        'updatedAt': item.updatedAt,
       });
     }
   }
@@ -165,6 +173,8 @@ class Controller {
         'dailyConsumption': item.dailyConsumption,
         'usagePerDay': item.usagePerDay,
         'numberOfUsers': item.numberOfUsers,
+        'createdAt': item.createdAt,
+        'updatedAt': item.updatedAt,
       });
     }
   }
@@ -186,6 +196,8 @@ class Controller {
         'dailyConsumption': newDailyConsumption,
         'usagePerDay': item.usagePerDay,
         'numberOfUsers': item.numberOfUsers,
+        'createdAt': item.createdAt,
+        'updatedAt': item.updatedAt,
       });
     }
   }

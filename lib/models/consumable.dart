@@ -9,6 +9,8 @@ class Consumable {
   double daysLeft;
   int usagePerDay;
   int numberOfUsers;
+  DateTime createdAt;
+  DateTime updatedAt;
 
   Consumable({
     required this.amount,
@@ -18,10 +20,22 @@ class Consumable {
     this.daysLeft = 0,
     required this.usagePerDay,
     required this.numberOfUsers,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
-  double calculateAmount() {
-    return amount - (dailyConsumption ?? 0) * usagePerDay * numberOfUsers;
+  void calculateAmount() {
+    final elapsedDays = DateTime.now().difference(updatedAt);
+    final resAmount =
+        amount -
+        (dailyConsumption ?? 0) *
+            usagePerDay *
+            numberOfUsers *
+            (elapsedDays.inHours / 24);
+    amount = double.parse(resAmount.toStringAsFixed(2));
+    print("calculateAmount");
+    print(name);
+    print(elapsedDays.inHours / 24);
   }
 
   void calculateDaysLeft() {
@@ -39,6 +53,8 @@ class Consumable {
       daysLeft: consumption.daysLeft,
       usagePerDay: consumption.usagePerDay,
       numberOfUsers: consumption.numberOfUsers,
+      createdAt: consumption.createdAt,
+      updatedAt: consumption.updatedAt,
     );
   }
 
@@ -67,6 +83,8 @@ class Consumable {
       daysLeft: consumption.daysLeft,
       usagePerDay: consumption.usagePerDay,
       numberOfUsers: consumption.numberOfUsers,
+      createdAt: consumption.createdAt,
+      updatedAt: consumption.updatedAt,
     );
   }
 
