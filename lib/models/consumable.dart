@@ -11,6 +11,7 @@ class Consumable {
   int numberOfUsers;
   DateTime createdAt;
   DateTime updatedAt;
+  double initialAmount;
 
   Consumable({
     required this.amount,
@@ -22,6 +23,7 @@ class Consumable {
     required this.numberOfUsers,
     required this.createdAt,
     required this.updatedAt,
+    required this.initialAmount,
   });
 
   void calculateAmount() {
@@ -55,6 +57,7 @@ class Consumable {
       numberOfUsers: consumption.numberOfUsers,
       createdAt: consumption.createdAt,
       updatedAt: consumption.updatedAt,
+      initialAmount: consumption.initialAmount,
     );
   }
 
@@ -85,6 +88,7 @@ class Consumable {
       numberOfUsers: consumption.numberOfUsers,
       createdAt: consumption.createdAt,
       updatedAt: consumption.updatedAt,
+      initialAmount: consumption.initialAmount,
     );
   }
 
@@ -100,10 +104,11 @@ class Consumable {
       numberOfUsers: numberOfUsers,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
+      initialAmount: initialAmount,
     );
   }
 
-  Future<void> fetchDefaultDailyConsumption(int id)async{
+  Future<void> fetchDefaultDailyConsumption(int id) async {
     final db = await DatabaseHelper.instance.database;
     final List<Map<String, dynamic>> result = await db.query(
       'm_average',

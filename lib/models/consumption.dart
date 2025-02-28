@@ -9,6 +9,7 @@ class Consumption {
   final int numberOfUsers;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final double initialAmount;
 
   Consumption({
     required this.id,
@@ -21,6 +22,7 @@ class Consumption {
     required this.numberOfUsers,
     required this.createdAt,
     required this.updatedAt,
+    required this.initialAmount,
   });
 
   Map<String, dynamic> toMap() {
@@ -35,6 +37,7 @@ class Consumption {
       'number_of_users': numberOfUsers,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
+      'initial_amount': initialAmount,
     };
   }
 
@@ -50,6 +53,7 @@ class Consumption {
       numberOfUsers: map['number_of_users'],
       createdAt: DateTime.parse(map['created_at']),
       updatedAt: DateTime.parse(map['updated_at']),
+      initialAmount: map['initial_amount'],
     );
   }
 }

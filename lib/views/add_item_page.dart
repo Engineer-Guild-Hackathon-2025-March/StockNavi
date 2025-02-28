@@ -13,6 +13,7 @@ class AddItemPage extends StatefulWidget {
     numberOfUsers: 1,
     createdAt: DateTime.now(),
     updatedAt: DateTime.now(),
+    initialAmount: 0,
   );
   final Controller controller;
 
@@ -237,6 +238,7 @@ class _AddItemPageState extends State<AddItemPage> {
         'numberOfUsers': int.tryParse(numberOfUsersController.text) ?? 1,
         'createdAt': widget.consumable.createdAt,
         'updatedAt': widget.consumable.updatedAt,
+        'initialAmount': double.tryParse(amountController.text) ?? 0.0,
       });
 
       Navigator.pop(context);
