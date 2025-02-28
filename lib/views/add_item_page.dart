@@ -5,15 +5,19 @@ import '../database/database_helper.dart';
 import '../models/consumable.dart';
 
 class AddItemPage extends StatefulWidget {
-  final Consumable consumable= Consumable(amount: 0, name: '', tags: [''], usagePerDay: 0, numberOfUsers: 1);
+  final Consumable consumable = Consumable(
+    amount: 0,
+    name: '',
+    tags: [''],
+    usagePerDay: 0,
+    numberOfUsers: 1,
+    createdAt: DateTime.now(),
+    updatedAt: DateTime.now(),
+  );
   final Controller controller;
 
   // consumable は任意引数。指定がなければ const Consumable(...) を使う
-  AddItemPage(
-    {
-    super.key,
-    required this.controller,
-  });
+  AddItemPage({super.key, required this.controller});
 
   @override
   State<AddItemPage> createState() {
@@ -21,7 +25,7 @@ class AddItemPage extends StatefulWidget {
   }
 }
 
-class _AddItemPageState extends State<AddItemPage>{
+class _AddItemPageState extends State<AddItemPage> {
   late TextEditingController nameController;
   late TextEditingController amountController;
   late TextEditingController usagePerDayController;
@@ -45,7 +49,7 @@ class _AddItemPageState extends State<AddItemPage>{
       text: widget.consumable.numberOfUsers.toString(),
     );
     selectedTag =
-      widget.consumable.tags.isNotEmpty ? widget.consumable.tags.first : '';
+        widget.consumable.tags.isNotEmpty ? widget.consumable.tags.first : '';
     _loadTagsAndUnits();
   }
 
@@ -116,17 +120,18 @@ class _AddItemPageState extends State<AddItemPage>{
             children: [
               const Text('タグ', style: TextStyle(color: Colors.blue)),
               DropdownButtonFormField<String>(
-                value: (_tags.contains(selectedTag) && selectedTag.isNotEmpty)
-                    ? selectedTag
-                    : null,
+                value:
+                    (_tags.contains(selectedTag) && selectedTag.isNotEmpty)
+                        ? selectedTag
+                        : null,
                 isExpanded: true,
                 items:
-                _tags.map((tag) {
-                  return DropdownMenuItem<String>(
-                    value: tag,
-                    child: Text(tag),
-                  );
-                }).toList(),
+                    _tags.map((tag) {
+                      return DropdownMenuItem<String>(
+                        value: tag,
+                        child: Text(tag),
+                      );
+                    }).toList(),
                 onChanged: (value) {
                   setState(() {
                     selectedTag = value!;
@@ -150,20 +155,25 @@ class _AddItemPageState extends State<AddItemPage>{
               const Text('残量', style: TextStyle(color: Colors.blue)),
               Row(
                 children: [
-                  const Text('残り', style: TextStyle(color: Colors.blue)), const SizedBox(width: 5),
+                  const Text('残り', style: TextStyle(color: Colors.blue)),
+                  const SizedBox(width: 5),
                   Expanded(
-                  child: TextField(
-                    controller: amountController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      hintText: '残量',
-                      border: OutlineInputBorder(),
+                    child: TextField(
+                      controller: amountController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        hintText: '残量',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Text(_currentUnit, style: const TextStyle(color: Colors.blue)),
-              ],),
+                  const SizedBox(width: 10),
+                  Text(
+                    _currentUnit,
+                    style: const TextStyle(color: Colors.blue),
+                  ),
+                ],
+              ),
               const SizedBox(height: 16),
               const Text('1日の使用回数', style: const TextStyle(color: Colors.blue)),
               TextField(
@@ -217,22 +227,25 @@ class _AddItemPageState extends State<AddItemPage>{
     );
   }
 
-  void _insertItem(){try {
+  void _insertItem() {
+    try {
+      widget.controller.handleUserInput('insert', {
+        'name': nameController.text,
+        'tag': selectedTag,
+        'tags': [selectedTag],
+        'amount': double.tryParse(amountController.text),
+        'usagePerDay': int.tryParse(usagePerDayController.text) ?? 1,
+        'numberOfUsers': int.tryParse(numberOfUsersController.text) ?? 1,
+        'dailyConsumption': widget.consumable.dailyConsumption,
+        'createdAt': widget.consumable.createdAt,
+        'updatedAt': widget.consumable.updatedAt,
+      });
 
-    widget.controller.handleUserInput('insert', {
-      'name': nameController.text,
-      'tag': selectedTag,
-      'tags': [selectedTag],
-      'amount': double.tryParse(amountController.text),
-      'usagePerDay': int.tryParse(usagePerDayController.text) ?? 1,
-      'numberOfUsers': int.tryParse(numberOfUsersController.text) ?? 1,
-      'dailyConsumption': widget.consumable.dailyConsumption,
-    });
-
-    Navigator.pop(context);
-  } catch (e) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('更新に失敗しました。入力内容を確認してください')));
-  }}
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('更新に失敗しました。入力内容を確認してください')));
+    }
+  }
 }

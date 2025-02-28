@@ -8,8 +8,6 @@ import 'package:stocknavi/models/consumable.dart';
 import 'package:stocknavi/services/notification_service.dart';
 import 'package:stocknavi/database/database_helper.dart';
 
-import '../models/consumables_list.dart';
-
 class Controller {
   final ConsumablesList _allConsumablesList = ConsumablesList();
   late final BaseViewState _view;
@@ -129,11 +127,16 @@ class Controller {
           dailyConsumption: data['dailyConsumption'],
           usagePerDay: data['usagePerDay'],
           numberOfUsers: data['numberOfUsers'],
+          createdAt: data['createdAt'],
+          updatedAt: data['updatedAt'],
         );
         consumable.fetchDefaultDailyConsumption(mAverageId);
         consumable.calculateDaysLeft();
         debugPrint("hello");
-        await _allConsumablesList.insertConsumable(consumable, mAverageId: mAverageId);
+        await _allConsumablesList.insertConsumable(
+          consumable,
+          mAverageId: mAverageId,
+        );
         break;
     }
     updateView();

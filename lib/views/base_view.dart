@@ -24,15 +24,15 @@ class BaseViewState extends State<BaseView> {
   void initState() {
     super.initState();
     _loadTags();
-    this._controller = Controller(this);
+    _controller = Controller(this);
+    _table = ConsumableTable(controller: _controller);
   }
 
   void setController(Controller controller) {
     _controller = controller;
-    _table = ConsumableTable(controller: controller);
   }
 
-  Controller getController(){
+  Controller getController() {
     return _controller;
   }
 
@@ -85,13 +85,12 @@ class BaseViewState extends State<BaseView> {
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AddItemPage(
-              controller: getController(),
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddItemPage(controller: getController()),
             ),
-          ),
-        );},
+          );
+        },
       ),
     );
   }
