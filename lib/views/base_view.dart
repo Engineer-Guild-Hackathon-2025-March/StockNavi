@@ -67,10 +67,14 @@ class BaseViewState extends State<BaseView> {
       appBar: AppBar(
         title: const Text(
           'Stock Navi',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 35,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF6C58DD),
+          ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.blue.shade100,
+        backgroundColor: Color(0xFFFFFFFF),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
