@@ -96,10 +96,11 @@ class NotificationService {
       now.year,
       now.month,
       now.day,
-      10,
+      11,
+      30,
     );
 
-    while (scheduledDate.weekday != DateTime.sunday) {
+    while (scheduledDate.weekday != DateTime.saturday) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
 

@@ -30,7 +30,10 @@ class ConsumableTable {
         children: [
           DataTableTheme(
             data: DataTableThemeData(
-              headingTextStyle: TextStyle(color: Colors.black, fontSize: 16),
+              headingTextStyle: TextStyle(
+                color: Color(0xff6c58dd),
+                fontSize: 16,
+              ),
               headingRowHeight: 40, // ヘッダー行の高さ
               dataRowMinHeight: 48, // データ行の最小高さ
             ),
@@ -76,7 +79,10 @@ class ConsumableTable {
                             children: [
                               Center(
                                 child: IconButton(
-                                  icon: Icon(Icons.edit),
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: Colors.grey.shade600,
+                                  ),
                                   onPressed: () {
                                     Navigator.push(
                                       context,
@@ -94,7 +100,10 @@ class ConsumableTable {
                               ),
                               Center(
                                 child: IconButton(
-                                  icon: Icon(Icons.shopping_cart),
+                                  icon: Icon(
+                                    Icons.shopping_cart,
+                                    color: Color(0xff6c58dd),
+                                  ),
                                   onPressed: () {
                                     Navigator.push(
                                       context,

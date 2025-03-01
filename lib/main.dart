@@ -14,8 +14,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Stock Navi',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepPurple,
+        dividerColor: Color(0xffdedcfa),
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        scaffoldBackgroundColor: Color.fromARGB(255, 243, 243, 248),
       ),
       home: const MyHomePage(),
     );
