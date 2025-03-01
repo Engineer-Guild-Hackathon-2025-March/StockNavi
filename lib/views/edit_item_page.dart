@@ -163,16 +163,14 @@ class _EditItemPageState extends State<EditItemPage> {
       appBar: AppBar(
         title: const Text(
           'Stock Navi',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 35,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF6C58DD),
+          ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.blue.shade100,
-        actions: [
-          IconButton(
-            onPressed: _deleteItem,
-            icon: const Icon(Icons.delete, color: Colors.red),
-          ),
-        ],
+        backgroundColor: Color(0xFFFFFFFF),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -180,7 +178,7 @@ class _EditItemPageState extends State<EditItemPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('タグ', style: TextStyle(color: Colors.blue)),
+              const Text('タグ', style: TextStyle(color: Color(0xFF6C58DD))),
               DropdownButtonFormField<String>(
                 value: selectedTag,
                 isExpanded: true,
@@ -201,7 +199,7 @@ class _EditItemPageState extends State<EditItemPage> {
               ),
               const SizedBox(height: 16),
 
-              const Text('商品名', style: TextStyle(color: Colors.blue)),
+              const Text('商品名', style: TextStyle(color: Color(0xFF6C58DD))),
               TextField(
                 controller: nameController,
                 decoration: const InputDecoration(
@@ -211,7 +209,7 @@ class _EditItemPageState extends State<EditItemPage> {
               ),
               const SizedBox(height: 16),
 
-              const Text('残量', style: TextStyle(color: Colors.blue)),
+              const Text('残量', style: TextStyle(color: Color(0xFF6C58DD))),
               const Text('新しくストックを購入しましたか？'),
               Row(
                 children: [
@@ -220,7 +218,9 @@ class _EditItemPageState extends State<EditItemPage> {
                       onPressed: () => setState(() => isPurchased = true),
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
-                            isPurchased ? Colors.blue : Colors.grey.shade300,
+                            isPurchased
+                                ? Color.fromARGB(255, 184, 179, 249)
+                                : Colors.grey.shade200,
                       ),
                       child: const Text('購入した'),
                     ),
@@ -231,7 +231,9 @@ class _EditItemPageState extends State<EditItemPage> {
                       onPressed: () => setState(() => isPurchased = false),
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
-                            !isPurchased ? Colors.blue : Colors.grey.shade300,
+                            !isPurchased
+                                ? Color.fromARGB(255, 184, 179, 249)
+                                : Colors.grey.shade200,
                       ),
                       child: const Text('未購入'),
                     ),
@@ -246,7 +248,7 @@ class _EditItemPageState extends State<EditItemPage> {
 
               const SizedBox(height: 16),
 
-              const Text('1日の使用回数', style: TextStyle(color: Colors.blue)),
+              const Text('1日の使用回数', style: TextStyle(color: Color(0xFF6C58DD))),
               TextField(
                 controller: usagePerDayController,
                 keyboardType: TextInputType.number,
@@ -254,7 +256,7 @@ class _EditItemPageState extends State<EditItemPage> {
               ),
               const SizedBox(height: 16),
 
-              const Text('使用人数', style: TextStyle(color: Colors.blue)),
+              const Text('使用人数', style: TextStyle(color: Color(0xFF6C58DD))),
               Row(
                 children: [
                   Expanded(
@@ -267,7 +269,7 @@ class _EditItemPageState extends State<EditItemPage> {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  const Text('人', style: TextStyle(color: Colors.blue)),
+                  const Text('人', style: TextStyle(color: Color(0xFF6C58DD))),
                 ],
               ),
 
@@ -276,7 +278,7 @@ class _EditItemPageState extends State<EditItemPage> {
                 child: ElevatedButton(
                   onPressed: _updateItem,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Color.fromARGB(255, 184, 179, 249),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -302,7 +304,7 @@ class _EditItemPageState extends State<EditItemPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('購入量', style: TextStyle(color: Colors.blue)),
+        const Text('購入量', style: TextStyle(color: Color(0xFF6C58DD))),
         Row(
           children: [
             Expanded(
@@ -316,9 +318,12 @@ class _EditItemPageState extends State<EditItemPage> {
               ),
             ),
             const SizedBox(width: 10),
-            Text(_currentUnit, style: const TextStyle(color: Colors.blue)),
+            Text(
+              _currentUnit,
+              style: const TextStyle(color: Color(0xFF6C58DD)),
+            ),
             const SizedBox(width: 5),
-            const Text('購入した', style: TextStyle(color: Colors.blue)),
+            const Text('購入した', style: TextStyle(color: Color(0xFF6C58DD))),
           ],
         ),
       ],
@@ -329,10 +334,10 @@ class _EditItemPageState extends State<EditItemPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('現在の残量', style: TextStyle(color: Colors.blue)),
+        const Text('現在の残量', style: TextStyle(color: Color(0xFF6C58DD))),
         Row(
           children: [
-            const Text('残り', style: TextStyle(color: Colors.blue)),
+            const Text('残り', style: TextStyle(color: Color(0xFF6C58DD))),
             const SizedBox(width: 5),
             Expanded(
               child: TextField(
@@ -345,7 +350,10 @@ class _EditItemPageState extends State<EditItemPage> {
               ),
             ),
             const SizedBox(width: 10),
-            Text(_currentUnit, style: const TextStyle(color: Colors.blue)),
+            Text(
+              _currentUnit,
+              style: const TextStyle(color: Color(0xFF6C58DD)),
+            ),
           ],
         ),
       ],
